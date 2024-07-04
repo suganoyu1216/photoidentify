@@ -2,12 +2,12 @@ from django.shortcuts import render
 from .forms import ImageUploadForm
 from django.conf import settings
 from tensorflow.keras.models import load_model 
-from tensorflow.keras.preprocessing.image import load_img # type: ignore
-from tensorflow.keras.preprocessing.image import img_to_array # type: ignore
-from tensorflow.keras.applications.vgg16 import VGG16 # type: ignore
-from tensorflow.keras.models import save_model # type: ignore
-from tensorflow.keras.applications.vgg16 import preprocess_input # type: ignore
-from tensorflow.keras.applications.vgg16 import decode_predictions # type: ignore
+from tensorflow.keras.preprocessing.image import load_img 
+from tensorflow.keras.preprocessing.image import img_to_array 
+from tensorflow.keras.applications.vgg16 import VGG16 
+from tensorflow.keras.models import save_model 
+from tensorflow.keras.applications.vgg16 import preprocess_input 
+from tensorflow.keras.applications.vgg16 import decode_predictions 
 
 model = VGG16(weights='imagenet')
 save_model(model, 'vgg16.h5')
@@ -32,10 +32,13 @@ def predict(request):
             model = load_model(model_path)
             result = model.predict(img_array)
             top_preds = decode_predictions(result, top=5)[0]
+
             img_data = request.POST.get('img_data')
             for pred in top_preds:
                 print("Predicted class: {}, Probability: {:.2f}%".format(pred[1], pred[2] * 100))
-            return render(request, 'home.html', {'form': form, 'prediction': result, 'img_data': img_data})
+
+            return render(request, 'home.html', {'form': form, 'prediction': top_preds, 'img_data': img_data})
+
         else:
             form = ImageUploadForm()
             return render(request, 'home.html', {'form': form})
