@@ -27,10 +27,17 @@
             <p>あなたのアップロードした画像の判定結果は以下の通りです。</p>
             <img src="{{ img_data }}" class="img-fluid mb-3">
 
+            {% comment %}
             {% for pred in predictions %}
             <p>{{ prediction.description }}: {{ prediction.probability }}%</p> 
 
         {% endfor %}
+        {% endcomment %}
+
+            {% for pred in prediction %}
+            <p>{{ pred.1 }}: {{ pred.2 }}%</p> 
+            {% endfor %}
+
         </div>
         {% endif %}
     </div>
